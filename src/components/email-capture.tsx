@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 const BRAND_COLORS = ["#D4A853", "#6BAF8D", "#C4835A", "#E0B665", "#EDEBE8"]
 
 export function EmailCapture() {
-  const [status, setStatus] = useState<"idle" | "loading" | "done">("idle")
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "already">("idle")
   const [email, setEmail] = useState("")
   const [emailError, setEmailError] = useState("")
   const emailRef = useRef<HTMLInputElement>(null)
@@ -52,6 +52,12 @@ export function EmailCapture() {
         return
       }
 
+      // Check if already signed up
+      if (data.message?.toLowerCase().includes("already")) {
+        setStatus("already")
+        return
+      }
+
       setStatus("done")
       triggerCelebration()
     } catch {
@@ -63,7 +69,7 @@ export function EmailCapture() {
   return (
     <div className="w-full max-w-md mx-auto">
       <AnimatePresence mode="wait">
-        {status !== "done" ? (
+        {status === "idle" || status === "loading" ? (
           <motion.form
             key="form"
             onSubmit={handleSubmit}
@@ -190,7 +196,7 @@ export function EmailCapture() {
               )}
             </AnimatePresence>
           </motion.form>
-        ) : (
+        ) : status === "done" ? (
           <motion.div
             key="done"
             initial={{ opacity: 0, y: 10 }}
@@ -202,6 +208,23 @@ export function EmailCapture() {
               <Check className="w-5 h-5 text-green-400" />
               <p className="text-white font-medium text-sm">
                 You&apos;re in. We&apos;ll be in touch.
+              </p>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="already"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="gradient-button rounded-[11px] py-4 sm:py-5 px-6 text-center"
+          >
+            <div className="relative z-10 flex flex-col items-center gap-1">
+              <p className="text-white font-medium text-sm">
+                You&apos;ve already signed up — we got you!
+              </p>
+              <p className="text-white/50 text-xs">
+                Sit tight, we&apos;ll reach out soon.
               </p>
             </div>
           </motion.div>
