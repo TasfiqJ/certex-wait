@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "npx @opennextjs/cloudflare build && npx wrangler deploy --config wrangler.jsonc",
-    "preview": "npx @opennextjs/cloudflare build && npx wrangler dev --config wrangler.jsonc"
+    "deploy": "npx @opennextjs/cloudflare build && npx wrangler deploy .open-next/worker.js --name certex-wait --assets .open-next/assets --compatibility-date 2025-09-27 --compatibility-flags nodejs_compat",
+    "preview": "npx @opennextjs/cloudflare build && npx wrangler dev .open-next/worker.js --assets .open-next/assets --compatibility-flags nodejs_compat"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
